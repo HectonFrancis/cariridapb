@@ -1,0 +1,647 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cariri Paraibano Interativo</title>
+
+<style>
+:root {
+  --verde: #245b3b;
+  --verde2: #38784e;
+  --areia: #f4e8c8;
+  --terra: #b65d35;
+  --texto: #203027;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: Arial, Helvetica, sans-serif;
+  background: #f7f4eb;
+  color: var(--texto);
+  line-height: 1.6;
+}
+
+header {
+  background: linear-gradient(120deg, #173f2a, #4b8050);
+  color: white;
+  padding: 38px 18px;
+  text-align: center;
+}
+
+header h1 {
+  font-size: clamp(2rem, 5vw, 3.2rem);
+  margin: 0 0 8px;
+}
+
+header p {
+  max-width: 800px;
+  margin: auto;
+}
+
+nav {
+  background: #173f2a;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 8px;
+  padding: 10px;
+  position: sticky;
+  top: 0;
+  z-index: 5;
+}
+
+nav a {
+  color: white;
+  text-decoration: none;
+  padding: 8px 12px;
+  border-radius: 8px;
+}
+
+nav a:hover {
+  background: var(--verde2);
+}
+
+main {
+  max-width: 1100px;
+  margin: 24px auto;
+  padding: 0 16px;
+}
+
+.card {
+  background: white;
+  border-radius: 15px;
+  padding: 22px;
+  margin: 18px 0;
+  box-shadow: 0 4px 14px #0000000d;
+  border: 1px solid #e7e1d3;
+}
+
+h2 {
+  color: var(--verde);
+  margin-top: 0;
+  border-bottom: 2px solid var(--areia);
+  padding-bottom: 8px;
+}
+
+.hero {
+  display: grid;
+  grid-template-columns: 1.2fr 0.8fr;
+  gap: 18px;
+  align-items: center;
+}
+
+.landscape {
+  min-height: 220px;
+  border-radius: 12px;
+  background: linear-gradient(
+    #a8d1d0 0 35%,
+    #e9c27e 35% 60%,
+    #9c6a43 60%
+  );
+  position: relative;
+  overflow: hidden;
+}
+
+.sun {
+  position: absolute;
+  right: 15%;
+  top: 12%;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: #f5d36d;
+}
+
+.hill {
+  position: absolute;
+  bottom: -20px;
+  width: 120%;
+  height: 130px;
+  border-radius: 50% 50% 0 0;
+  background: #6f8a4e;
+  left: -10%;
+  transform: rotate(-5deg);
+}
+
+.hill.two {
+  background: #b77a47;
+  bottom: -52px;
+  left: 25%;
+  transform: rotate(8deg);
+}
+
+.cactus {
+  position: absolute;
+  bottom: 48px;
+  left: 35%;
+  width: 15px;
+  height: 70px;
+  background: #2c603e;
+  border-radius: 10px;
+}
+
+.cactus:before,
+.cactus:after {
+  content: "";
+  position: absolute;
+  width: 24px;
+  height: 9px;
+  border: 7px solid #2c603e;
+  border-bottom: 0;
+  border-radius: 15px 15px 0 0;
+}
+
+.cactus:before {
+  left: -20px;
+  top: 25px;
+  transform: rotate(-90deg);
+}
+
+.cactus:after {
+  right: -20px;
+  top: 38px;
+  transform: rotate(90deg);
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 14px;
+}
+
+.tile {
+  padding: 16px;
+  background: #fffaf0;
+  border: 1px solid #eadfc7;
+  border-radius: 12px;
+}
+
+button {
+  border: 0;
+  border-radius: 9px;
+  padding: 10px 15px;
+  background: var(--verde);
+  color: white;
+  font-weight: bold;
+  cursor: pointer;
+  margin: 5px 3px;
+}
+
+button:hover {
+  background: var(--verde2);
+}
+
+button.secondary {
+  background: #8a512e;
+}
+
+input[type="text"],
+textarea,
+select {
+  padding: 10px;
+  border: 1px solid #c9c2b3;
+  border-radius: 8px;
+  width: 100%;
+  font: inherit;
+  margin: 6px 0;
+}
+
+.question {
+  padding: 13px;
+  background: #f8f5ec;
+  border-radius: 10px;
+  margin: 12px 0;
+}
+
+.feedback {
+  font-weight: bold;
+  margin-top: 8px;
+}
+
+.memory-board {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(70px, 1fr));
+  gap: 10px;
+  max-width: 550px;
+}
+
+.memory-card {
+  height: 85px;
+  font-size: 1.5rem;
+  background: #d8e7d5;
+  color: #203027;
+  border: 2px solid #aac7a8;
+}
+
+.memory-card.revealed,
+.memory-card.matched {
+  background: #f4e8c8;
+}
+
+.crossword {
+  display: grid;
+  grid-template-columns: repeat(8, minmax(25px, 42px));
+  gap: 3px;
+  margin: 15px 0;
+}
+
+.crossword input {
+  width: 100%;
+  aspect-ratio: 1;
+  text-align: center;
+  text-transform: uppercase;
+  padding: 0;
+  margin: 0;
+  border-radius: 4px;
+  font-weight: bold;
+}
+
+.crossword input.blocked {
+  background: #264b35;
+  border-color: #264b35;
+  color: #264b35;
+  pointer-events: none;
+}
+
+.small {
+  font-size: 0.9rem;
+  color: #5c665e;
+}
+
+.pill {
+  display: inline-block;
+  background: #e4eddc;
+  padding: 4px 9px;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  margin: 3px;
+}
+
+footer {
+  text-align: center;
+  padding: 28px;
+  background: #173f2a;
+  color: white;
+  margin-top: 30px;
+}
+
+iframe {
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  border: 0;
+  border-radius: 10px;
+}
+
+@media (max-width: 700px) {
+  .hero {
+    grid-template-columns: 1fr;
+  }
+
+  .memory-card {
+    height: 70px;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<header>
+  <h1>🌵 Cariri Paraibano Interativo</h1>
+  <p>
+    Explore a Caatinga, conheça a cultura e os municípios
+    do Cariri paraibano e aprenda jogando.
+  </p>
+</header>
+
+<nav>
+  <a href="#inicio">Início</a>
+  <a href="#territorio">Território</a>
+  <a href="#videos">Vídeos</a>
+  <a href="#quiz">Quiz</a>
+  <a href="#cruzadas">Palavras cruzadas</a>
+  <a href="#memoria">Jogo da memória</a>
+  <a href="#missao">Missão ambiental</a>
+  <a href="#anotacoes">Anotações</a>
+</nav>
+
+<main>
+
+<section id="inicio" class="card hero">
+  <div>
+    <span class="pill">Geografia • Meio ambiente • Cultura</span>
+
+    <h2>Conhecer para valorizar</h2>
+
+    <p>
+      O Cariri paraibano integra o semiárido nordestino
+      e apresenta paisagens marcadas pela Caatinga,
+      chuvas irregulares, adaptação à seca, agricultura,
+      criação de animais e forte patrimônio cultural.
+    </p>
+
+    <p>
+      Use as seções deste site para ler, assistir a vídeos
+      e testar seus conhecimentos.
+    </p>
+  </div>
+
+  <div class="landscape" role="img"
+       aria-label="Paisagem semiárida com sol, morros e cacto">
+    <div class="sun"></div>
+    <div class="hill"></div>
+    <div class="hill two"></div>
+    <div class="cactus"></div>
+  </div>
+</section>
+
+<section id="territorio" class="card">
+  <h2>📍 Conheça o território</h2>
+
+  <div class="grid">
+    <div class="tile">
+      <h3>🌦️ Clima</h3>
+      <p>
+        Predomina o clima semiárido, com chuvas escassas
+        e irregulares e períodos de estiagem.
+        A convivência com o clima exige planejamento
+        do uso da água.
+      </p>
+    </div>
+
+    <div class="tile">
+      <h3>🌵 Caatinga</h3>
+      <p>
+        Bioma exclusivamente brasileiro, com plantas
+        adaptadas à falta de água, como cactos,
+        arbustos e árvores que podem perder as folhas
+        na estação seca.
+      </p>
+    </div>
+
+    <div class="tile">
+      <h3>💧 Água</h3>
+      <p>
+        Cisternas, açudes, barragens e outras formas
+        de armazenamento ajudam a garantir água.
+        O uso responsável e a proteção das fontes
+        são fundamentais.
+      </p>
+    </div>
+
+    <div class="tile">
+      <h3>🐐 Economia e cultura</h3>
+      <p>
+        A pecuária, a agricultura familiar, o artesanato,
+        a música, as festas populares e os conhecimentos
+        tradicionais fazem parte da diversidade regional.
+      </p>
+    </div>
+  </div>
+
+  <h3>Desafio de observação</h3>
+
+  <p>
+    Escolha um município do Cariri paraibano — por exemplo,
+    Sumé, Monteiro, Serra Branca, Taperoá, Cabaceiras
+    ou Barra de Santana — e registre uma paisagem,
+    atividade econômica ou prática cultural local.
+  </p>
+
+  <label for="municipio">Município escolhido</label>
+  <input id="municipio" type="text" placeholder="Digite o município">
+
+  <label for="observacao">O que você observou?</label>
+  <textarea id="observacao" rows="3"
+    placeholder="Descreva uma paisagem, atividade ou tradição..."></textarea>
+</section>
+
+<section id="videos" class="card">
+  <h2>▶️ Vídeos para explorar</h2>
+
+  <p>
+    Explore os temas abaixo. Se os vídeos incorporados
+    não carregarem, pesquise os títulos diretamente no YouTube.
+  </p>
+
+  <div class="grid">
+    <div class="tile">
+      <h3>Caatinga e biodiversidade</h3>
+      <iframe loading="lazy"
+        src="https://www.youtube-nocookie.com/embed?listType=search&list=Caatinga%20bioma%20brasileiro%20educativo"
+        title="Vídeos sobre a Caatinga"
+        allowfullscreen></iframe>
+      <p class="small">
+        Tema: adaptações das plantas e dos animais ao semiárido.
+      </p>
+    </div>
+
+    <div class="tile">
+      <h3>Desertificação no semiárido</h3>
+      <iframe loading="lazy"
+        src="https://www.youtube-nocookie.com/embed?listType=search&list=desertifica%C3%A7%C3%A3o%20semi%C3%A1rido%20nordestino"
+        title="Vídeos sobre desertificação"
+        allowfullscreen></iframe>
+      <p class="small">
+        Tema: causas, consequências e prevenção.
+      </p>
+    </div>
+
+    <div class="tile">
+      <h3>Cariri paraibano</h3>
+      <iframe loading="lazy"
+        src="https://www.youtube-nocookie.com/embed?listType=search&list=Cariri%20paraibano%20cultura%20paisagens"
+        title="Vídeos sobre o Cariri paraibano"
+        allowfullscreen></iframe>
+      <p class="small">
+        Tema: paisagens, cultura e modos de vida.
+      </p>
+    </div>
+  </div>
+</section>
+
+<section id="quiz" class="card">
+  <h2>🧠 Quiz do Cariri</h2>
+  <p>Marque uma alternativa por questão e confira seu resultado.</p>
+
+  <div class="question">
+    <p><b>1. Qual bioma predomina no Cariri paraibano?</b></p>
+    <label><input type="radio" name="q1" value="a"> Mata Atlântica</label><br>
+    <label><input type="radio" name="q1" value="b"> Caatinga</label><br>
+    <label><input type="radio" name="q1" value="c"> Pampa</label>
+  </div>
+
+  <div class="question">
+    <p><b>2. Uma característica comum do clima semiárido é:</b></p>
+    <label><input type="radio" name="q2" value="a"> Chuvas abundantes o ano inteiro</label><br>
+    <label><input type="radio" name="q2" value="b"> Neve frequente</label><br>
+    <label><input type="radio" name="q2" value="c"> Chuvas irregulares e estiagens</label>
+  </div>
+
+  <div class="question">
+    <p><b>3. Qual prática ajuda a armazenar água da chuva?</b></p>
+    <label><input type="radio" name="q3" value="a"> Cisterna</label><br>
+    <label><input type="radio" name="q3" value="b"> Queimada</label><br>
+    <label><input type="radio" name="q3" value="c"> Desmatamento</label>
+  </div>
+
+  <div class="question">
+    <p><b>4. A desertificação pode ser agravada por:</b></p>
+    <label><input type="radio" name="q4" value="a"> Recuperação da vegetação nativa</label><br>
+    <label><input type="radio" name="q4" value="b"> Manejo inadequado do solo e retirada da vegetação</label><br>
+    <label><input type="radio" name="q4" value="c"> Proteção de nascentes</label>
+  </div>
+
+  <div class="question">
+    <p><b>5. Uma atitude sustentável é:</b></p>
+    <label><input type="radio" name="q5" value="a"> Desperdiçar água</label><br>
+    <label><input type="radio" name="q5" value="b"> Jogar resíduos em rios e açudes</label><br>
+    <label><input type="radio" name="q5" value="c"> Proteger a Caatinga e usar a água com responsabilidade</label>
+  </div>
+
+  <button onclick="corrigirQuiz()">Corrigir quiz</button>
+  <button class="secondary" onclick="limparQuiz()">Tentar novamente</button>
+
+  <p id="resultadoQuiz" class="feedback" aria-live="polite"></p>
+</section>
+
+<section id="cruzadas" class="card">
+  <h2>🔤 Palavras cruzadas</h2>
+
+  <p>
+    Preencha as palavras na horizontal.
+    Use letras sem acentos.
+  </p>
+
+  <div class="grid">
+    <div class="tile">
+      <b>1. Bioma do Cariri (8 letras)</b>
+      <p class="small">Dica: vegetação adaptada ao semiárido.</p>
+    </div>
+
+    <div class="tile">
+      <b>2. Reservatório para guardar água (8 letras)</b>
+      <p class="small">Dica: muito usado em áreas rurais.</p>
+    </div>
+
+    <div class="tile">
+      <b>3. Longo período com pouca chuva (8 letras)</b>
+      <p class="small">Dica: período de estiagem.</p>
+    </div>
+  </div>
+
+  <div class="crossword" id="crossword"></div>
+
+  <button onclick="verificarCruzadas()">Verificar palavras</button>
+  <button class="secondary" onclick="mostrarCruzadas()">Mostrar respostas</button>
+
+  <p id="resultadoCruzadas" class="feedback" aria-live="polite"></p>
+</section>
+
+<section id="memoria" class="card">
+  <h2>🃏 Jogo da memória</h2>
+
+  <p>
+    Encontre os seis pares relacionados ao ambiente
+    e à vida no semiárido.
+  </p>
+
+  <p>
+    Jogadas: <b id="jogadas">0</b> ·
+    Pares encontrados: <b id="pares">0</b>/6
+  </p>
+
+  <div class="memory-board" id="memoryBoard"></div>
+
+  <button class="secondary" onclick="iniciarMemoria()">
+    Reiniciar jogo
+  </button>
+
+  <p id="memoryMessage" aria-live="polite"></p>
+</section>
+
+<section id="missao" class="card">
+  <h2>🌱 Missão ambiental</h2>
+
+  <p>
+    Imagine que sua turma vai organizar uma ação ambiental
+    na comunidade. Selecione as atitudes que fariam parte
+    de um plano responsável.
+  </p>
+
+  <div id="missionOptions">
+    <label>
+      <input type="checkbox" value="1">
+      Plantar e proteger espécies nativas.
+    </label><br>
+
+    <label>
+      <input type="checkbox" value="0">
+      Retirar toda a vegetação e deixar o solo exposto.
+    </label><br>
+
+    <label>
+      <input type="checkbox" value="1">
+      Evitar o desperdício e armazenar água adequadamente.
+    </label><br>
+
+    <label>
+      <input type="checkbox" value="1">
+      Recolher resíduos e incentivar o descarte correto.
+    </label><br>
+
+    <label>
+      <input type="checkbox" value="0">
+      Fazer queimadas sem planejamento.
+    </label><br>
+
+    <label>
+      <input type="checkbox" value="1">
+      Investigar os problemas ambientais locais.
+    </label>
+  </div>
+
+  <button onclick="corrigirMissao()">Conferir missão</button>
+
+  <p id="resultadoMissao" class="feedback" aria-live="polite"></p>
+</section>
+
+<section id="anotacoes" class="card">
+  <h2>📝 Minhas anotações</h2>
+
+  <p>
+    Registre uma descoberta, uma dúvida e uma proposta
+    para valorizar o Cariri paraibano.
+  </p>
+
+  <textarea id="notas" rows="6"
+    placeholder="Hoje aprendi que...&#10;Ainda quero saber...&#10;Uma ação possível é..."></textarea>
+
+  <button onclick="baixarAnotacoes()">
+    Baixar minhas anotações (.txt)
+  </button>
+
+  <p class="small">
+    Baixe o arquivo para guardar suas respostas.
+  </p>
+</section>
+
+</main>
+
+<footer>
+  <p>Projeto educativo • Cariri Paraibano Interativo</p>
+  <p>Material de apoio para aulas de Geografia e Educação Ambiental.</p>
+</footer>
+
+<script>
+// PARTE 2: JAVASCRIPT DOS JOGOS
+// O código continua abaixo.
+</script>
+
+</body>
+</html>
